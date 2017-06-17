@@ -1,10 +1,9 @@
 # -*- coding:utf-8 -*-
-
+from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
-from datetime import datetime
 
 
 class UserProfile(AbstractUser):

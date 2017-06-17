@@ -1,9 +1,9 @@
 # -*- coding:utf-8 -*-
+from datetime import datetime
 
 from django.db import models
 
 # Create your models here.
-from datetime import datetime
 
 
 class Course(models.Model):
