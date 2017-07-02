@@ -28,6 +28,9 @@ def send_register_email(email, send_type='register'):
     if send_type == 'register':
         email_title = 'mx注册激活'
         email_body = '点击下面链接注册激活账号 http://127.0.0.1:8000/active/{0}'.format(code)
+    elif send_type == 'forget':
+        email_title = 'mx找回密码'
+        email_body = '点击下面链接重置密码 http://127.0.0.1:8000/reset/{0}'.format(code)
 
     send_status = send_mail(email_title, email_body, EMAIL_FROM, [email])
     if send_status:
