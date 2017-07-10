@@ -20,7 +20,6 @@ from django.views.static import serve
 import xadmin
 
 from users.views import LoginView, RegisterView, ActiveUserVIew, ForgetPwdView, ResetView, ModifyPwdView
-from organization.views import OrgListView
 from mxonline.settings import MEDIA_ROOT
 
 urlpatterns = [
@@ -33,9 +32,6 @@ urlpatterns = [
     url(r'^forgetpwd/$', ForgetPwdView.as_view(), name='forget_pwd'),
     url(r'^reset/(?P<active_code>.*)/$', ResetView.as_view(), name='reset_pwd'),
     url(r'^modifypwd/$', ModifyPwdView.as_view(), name='modify_pwd'),
-
-    #课程机构
-    url(r'^org_list/$', OrgListView.as_view(), name='org_list'),
-
+    url(r'^org/', include('organization.urls', namespace='org')),
     url(r'media/(?P<path>.*)$', serve, {'document_root':MEDIA_ROOT})
 ]
