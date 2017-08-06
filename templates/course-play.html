@@ -8,6 +8,16 @@
     <link rel="stylesheet" type="text/css" href="{% static '' %}css/aui.css" />
     <link rel="stylesheet" type="text/css" href="{% static '' %}css/mooc.css" />
      <link rel="stylesheet" type="text/css" href="{% static '' %}css/muke/course/common-less.css">
+    <link href="http://vjs.zencdn.net/6.2.4/video-js.css" rel="stylesheet">
+    <style>
+        .video-js .vjs-big-play-button{
+            top: 50%;
+            left: 50%;
+        }
+    </style>
+{% endblock %}
+{% block custom_js %}
+    <script src="http://vjs.zencdn.net/6.2.4/video.js"></script>
 {% endblock %}
 {% block custom_bread %}
     <section>
@@ -23,33 +33,20 @@
 {% endblock %}
 
 {% block content %}
-    <div id="main">
+<div id="main">
     <div class="course-infos">
-        <div class="w pr">
-            <div style="height: 15px" class="path">
-            </div>
-            <div class="hd">
-                <h2 class="l">{{ course.name }}</h2>
-            </div>
-            <div class="statics clearfix">
-                <div class="static-item ">
-                    <span class="meta-value"><strong>{{ course.get_degree_display }}</strong></span>
-                    <span class="meta">难度</span>
-                    <em></em>
-                </div>
-                <div class="static-item static-time">
-                    <span class="meta-value">{{ course.learn_times }}分钟</span>
-                    <span class="meta">时长</span>
-                    <em></em>
-                </div>
-                <div class="static-item">
-                    <span class="meta-value"><strong>{{ course.students }}</strong></span>
-                    <span class="meta">学习人数</span>
-                    <em></em>
-                </div>
-            </div>
+        <div style="width: 1200px; height: 624px; margin: auto">
+            <video id="my-video" class="video-js" controls preload="auto" width="1200" height="624" poster="" data-setup="{}">
+                <source src="{{ video.url }}" type='video/mp4'>
+                <source src="MY_VIDEO.webm" type='video/webm'>
+            <p class="vjs-no-js">
+              To view this video please enable JavaScript, and consider upgrading to a web browser that
+              <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+            </p>
+          </video>
         </div>
     </div>
+
     <div class="course-info-main clearfix w has-progress">
 
         <div class="info-bar clearfix">

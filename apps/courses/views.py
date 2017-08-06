@@ -3,8 +3,9 @@ from django.views.generic.base import View
 from django.http import HttpResponse
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.
-from .models import Course, CourseResource
-from operation.models import UserFavorite, CourseComments
+from .models import Course, CourseResource, Video
+from operation.models import UserFavorite, CourseComments, UserCourse
+from utils.mixin_utils import LoginRequiredMixin
 
 
 class CourseListView(View):
@@ -58,25 +59,66 @@ class CourseDetailView(View):
         })
 
 
-class CourseInfoView(View):
+class CourseInfoView(LoginRequiredMixin, View):
     def get(self, request, course_id):
         course = Course.objects.get(id = int(course_id))
+        #查询该用户是否学习过该课程
+        user_studed_course = UserCourse.objects.filter(user = request.user, course = course)
+        if not user_studed_course:
+            user_studed_course = UserCourse(user=request.user, course = course)
+            user_studed_course.save()
+        # 获取学过该课程的用户id列表
+        user_courses = UserCourse.objects.filter(course = course)
+        user_ids = [user_course.user.id for user_course in user_courses]
+        # 获取列表中用户学过的课程
+        all_user_courses = UserCourse.objects.filter(user_id__in= user_ids)
+        course_ids = [user_course.course.id for user_course in all_user_courses]
+        relate_courses = Course.objects.filter(id__in=course_ids).order_by('-click_nums')[:5]
         all_resource = CourseResource.objects.filter(course= course)
         return render(request, 'course-video.html', {
             'course': course,
             'all_resource':all_resource,
+            'relate_courses':relate_courses,
+        })
+
+
+class CourseVideoView(View):
+    def get(self, request, video_id, course_id):
+        video = Video.objects.get(id = int(video_id))
+        course = Course.objects.get(id=int(course_id))
+        # 获取学过该课程的用户id列表
+        user_courses = UserCourse.objects.filter(course=course)
+        user_ids = [user_course.user.id for user_course in user_courses]
+        # 获取列表中用户学过的课程
+        all_user_courses = UserCourse.objects.filter(user_id__in=user_ids)
+        course_ids = [user_course.course.id for user_course in all_user_courses]
+        relate_courses = Course.objects.filter(id__in=course_ids).order_by('-click_nums')[:5]
+        all_resource = CourseResource.objects.filter(course=course)
+        return render(request, 'course-play.html', {
+            'video': video,
+            'course': course,
+            'all_resource': all_resource,
+            'relate_courses': relate_courses,
         })
 
 
 class CourseCommentView(View):
     def get(self, request, course_id):
         course = Course.objects.get(id = int(course_id))
+        # 获取学过该课程的用户id列表
+        user_courses = UserCourse.objects.filter(course=course)
+        user_ids = [user_course.user.id for user_course in user_courses]
+        # 获取列表中用户学过的课程
+        all_user_courses = UserCourse.objects.filter(user_id__in=user_ids)
+        course_ids = [user_course.course.id for user_course in all_user_courses]
+        relate_courses = Course.objects.filter(id__in=course_ids).order_by('-click_nums')[:5]
         all_resource = CourseResource.objects.filter(course= course)
         all_comment = CourseComments.objects.filter(course=course).order_by('-add_time')
         return render(request, 'course-comment.html', {
             'course': course,
             'all_resource': all_resource,
             'all_comment':all_comment,
+            'relate_courses': relate_courses,
         })
 
 
