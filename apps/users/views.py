@@ -8,6 +8,7 @@ from django.contrib.auth.hashers import make_password
 from .models import UserProfile, EmailVerifyRecord
 from .froms import LoginForm, RegisterForm, ForgetPwdForm, ModifyPwdForm
 from utils.email_send import send_register_email
+from utils.mixin_utils import LoginRequiredMixin
 
 # Create your views here.
 
@@ -125,3 +126,8 @@ class ForgetPwdView(View):
             return render(request, 'send_success.html')
         else:
             return render(request, 'forgetpwd.html', {'forget_pwd_form': forget_pwd_form })
+
+
+class UserInfoView(LoginRequiredMixin, View):
+    def get(self, request):
+        return render(request, 'usercenter-info.html', {})

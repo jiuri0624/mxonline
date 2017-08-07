@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.generic.base import View
 from django.http import HttpResponse
+from django.db.models import Q
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
@@ -13,6 +14,9 @@ from operation.models import UserFavorite
 class OrgListView(View):
     def get(self, request):
         all_orgs = CourseOrg.objects.all()
+        search_keywords = request.GET.get('keywords', '')
+        if search_keywords:
+            all_orgs = all_orgs.filter(Q(name__icontains= search_keywords)|Q(desc__icontains= search_keywords))
         hot_orgs = all_orgs.order_by('click_nums')[:3]
         all_citys = CityDic.objects.all()
         city_id = request.GET.get('city', '')
@@ -159,6 +163,9 @@ class AddFavView(View):
 class TeacherListView(View):
     def get(self,request):
         all_teachers = Teacher.objects.all()
+        search_keywords = request.GET.get('keywords', '')
+        if search_keywords:
+            all_teachers = all_teachers.filter(name__icontains= search_keywords)
         sorted_teachers = all_teachers.order_by('-click_nums')[:5]
         #排序
         sort = request.GET.get('sort', '')

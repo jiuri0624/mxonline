@@ -35,4 +35,5 @@ urlpatterns = [
     url(r'^org/', include('organization.urls', namespace='org')),
     url(r'media/(?P<path>.*)$', serve, {'document_root':MEDIA_ROOT}),
     url(r'^course/', include('courses.urls', namespace='course')),
+    url(r'^users/', include('users.urls', namespace='users')),
 ]
