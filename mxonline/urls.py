@@ -19,13 +19,15 @@ from django.views.generic import TemplateView
 from django.views.static import serve
 import xadmin
 
-from users.views import LoginView, RegisterView, ActiveUserVIew, ForgetPwdView, ResetView, ModifyPwdView
-from mxonline.settings import MEDIA_ROOT
+from users.views import LoginView,LogoutView, RegisterView, ActiveUserVIew, ForgetPwdView, ResetView, ModifyPwdView, IndexView
+from mxonline.settings import MEDIA_ROOT, STATIC_ROOT
 
 urlpatterns = [
     url(r'^xadmin/', xadmin.site.urls),
-    url(r'^$', TemplateView.as_view(template_name='index.html') , name='index'),
+    #首页
+    url(r'^$', IndexView.as_view(), name='index'),
     url(r'^login/$', LoginView.as_view() , name='login'),
+    url(r'^logout/$', LogoutView.as_view(), name='logout'),
     url(r'^register/$', RegisterView.as_view() , name='register'),
     url(r'^captcha/', include('captcha.urls')),
     url(r'^active/(?P<active_code>.*)/$', ActiveUserVIew.as_view(), name='user_active'),
@@ -33,7 +35,16 @@ urlpatterns = [
     url(r'^reset/(?P<active_code>.*)/$', ResetView.as_view(), name='reset_pwd'),
     url(r'^modifypwd/$', ModifyPwdView.as_view(), name='modify_pwd'),
     url(r'^org/', include('organization.urls', namespace='org')),
+
+    #配置上传文件访问的处理函数
     url(r'media/(?P<path>.*)$', serve, {'document_root':MEDIA_ROOT}),
+    url(r'static/(?P<path>.*)$', serve, {'document_root': STATIC_ROOT}),
     url(r'^course/', include('courses.urls', namespace='course')),
     url(r'^users/', include('users.urls', namespace='users')),
 ]
+
+
+# 全局404页面
+handler404 = 'users.views.page_not_found'
+# 全局500页面
+handler500 = 'users.views.page_error'

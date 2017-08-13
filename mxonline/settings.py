@@ -27,7 +27,7 @@ SECRET_KEY = '#j07vr36ck&z$t2209s!zd81un-ee(3z8)04bwz^nk&sqllscw'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -139,6 +139,9 @@ STATICFILES_DIRS = (
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 
 EMAIL_HOST = 'smtp.126.com'
 EMAIL_PORT = 25
