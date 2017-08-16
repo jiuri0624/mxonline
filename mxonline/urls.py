@@ -20,7 +20,7 @@ from django.views.static import serve
 import xadmin
 
 from users.views import LoginView,LogoutView, RegisterView, ActiveUserVIew, ForgetPwdView, ResetView, ModifyPwdView, IndexView
-from mxonline.settings import MEDIA_ROOT, STATIC_ROOT
+from mxonline.settings import MEDIA_ROOT
 
 urlpatterns = [
     url(r'^xadmin/', xadmin.site.urls),
@@ -38,9 +38,11 @@ urlpatterns = [
 
     #配置上传文件访问的处理函数
     url(r'media/(?P<path>.*)$', serve, {'document_root':MEDIA_ROOT}),
-    url(r'static/(?P<path>.*)$', serve, {'document_root': STATIC_ROOT}),
+    # url(r'static/(?P<path>.*)$', serve, {'document_root': STATIC_ROOT}),
     url(r'^course/', include('courses.urls', namespace='course')),
     url(r'^users/', include('users.urls', namespace='users')),
+
+    url(r'^ueditor/',include('DjangoUeditor.urls' )),
 ]
 
 
